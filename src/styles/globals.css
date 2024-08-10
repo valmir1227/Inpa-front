@@ -1,0 +1,80 @@
+html,
+body {
+  scroll-behavior: smooth;
+  padding: 0;
+  margin: 0;
+  height: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+#zmmtg-root::after {
+  width: 150px;
+  height: 90px;
+  position: absolute;
+  border: 5px solid transparent;
+  top: 70px;
+  left: 20px;
+  content: "";
+  /* background-color: #00000033; */
+  background-image: url("/logo-branca.png");
+  opacity: 0.25;
+  background-size: contain;
+  background-repeat: no-repeat;
+  z-index: 9999;
+  border-radius: 5px;
+}
+#zmmtg-root {
+  position: relative;
+}
+
+.rdw-editor-wrapper {
+  width: 100%;
+}
+
+.rdw-editor-main {
+  height: calc(100% - 40px) !important;
+  padding: 10px;
+}
+/* div#zmmtg-root {
+  position: relative;
+} */
+.dropdown-toggle + .custom-dropdown-menu:not(.show) {
+  display: none; /* //fix for dropdown menu not closing */
+}
+
+.react-datepicker__day--selected,
+.react-datepicker__day--in-selecting-range,
+.react-datepicker__day--in-range,
+.react-datepicker__month-text--selected,
+.react-datepicker__month-text--in-selecting-range,
+.react-datepicker__month-text--in-range,
+.react-datepicker__quarter-text--selected,
+.react-datepicker__quarter-text--in-selecting-range,
+.react-datepicker__quarter-text--in-range,
+.react-datepicker__year-text--selected,
+.react-datepicker__year-text--in-selecting-range,
+.react-datepicker__year-text--in-range,
+.react-datepicker__day--keyboard-selected,
+.react-datepicker__month-text--keyboard-selected,
+.react-datepicker__quarter-text--keyboard-selected,
+.react-datepicker__year-text--keyboard-selected {
+  background-color: #ffa61a !important;
+}
+
+.leftwatermark,
+.watermark {
+  left: 32px;
+  top: 32px;
+  background-position: center left;
+  background-repeat: no-repeat;
+  background-size: contain;
+  visibility: hidden !important;
+}

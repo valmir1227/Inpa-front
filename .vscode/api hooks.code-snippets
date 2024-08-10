@@ -1,0 +1,9 @@
+{
+
+  "useFetch": {
+    "scope": "javascript,typescript",
+    "prefix": "uf",
+    "body": ["const [data, error, isFetching, get] = useFetch('$1')"],
+    "description": "Call useFetch hook"
+  }
+}

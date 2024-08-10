@@ -1,0 +1,5 @@
+# Created by Vercel CLI
+NEXT_PUBLIC_JITSI_URL="jitsi.inpaonline.com.br"
+NEXT_PUBLIC_OPENVIDU_URL="wss://ov.kanel.com.br"
+NEXT_PUBLIC_VIDEO_URL="https://inpa.kanel.com.br/v/"
+teste="teste"
