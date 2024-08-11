@@ -398,7 +398,6 @@ const UserInfo = ({ type }: any) => {
             src={userPhoto}
             bg="#ddd"
           />
-
           <ChevronDownIcon boxSize={6} />
         </HStack>
       </PopoverTrigger>

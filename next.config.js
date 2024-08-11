@@ -18,11 +18,11 @@ const nextConfig = {
         headers: [
           {
             key: "Cross-Origin-Embedder-Policy",
-            value: "require-corp",
+            value: "cross-origin",
           },
           {
             key: "Cross-Origin-Opener-Policy",
-            value: "same-origin",
+            value: "cross-origin",
           },
         ],
       },
@@ -35,7 +35,7 @@ const nextConfig = {
           },
           {
             key: "Cross-Origin-Opener-Policy",
-            value: "same-origin",
+            value: "cross-origin",
           },
         ],
       },
@@ -48,7 +48,7 @@ const nextConfig = {
           },
           {
             key: "Cross-Origin-Opener-Policy",
-            value: "same-origin",
+            value: "cross -origin",
           },
         ],
       },

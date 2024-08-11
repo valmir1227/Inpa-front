@@ -1,1 +1,1 @@
-# Inpa-front
+Self-made Boilerplate using NextJs and ChakraUi
