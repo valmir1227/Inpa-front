@@ -62,6 +62,7 @@ export function Agenda({
   );
 
   const [days, setDays] = useState<any>(formatedCalendar || []);
+
   const { setCart, cart, setCartRaw, cartRaw } = useCart();
 
   const expertData = {
@@ -72,80 +73,77 @@ export function Agenda({
   const { user } = useUsers();
 
   function handleSelectHour(selectedHour: any, service: any = null) {
-    // const diff = days.filter((day: any) => day.date !== selectedDay.date);
-
-    /* const updatedDay = {
-      date: selectedDay.date,
-      expertData,
-      hours: [
-        ...selectedDay.hours?.filter(
-          (dia: any) => dia.hour !== selectedHour.hour
-        ),
-        {
-          ...selectedHour,
-          hour: selectedHour.hour,
-          status: invertStatusOnClick,
-          selectedService,
-        },
-      ],
-    }; */
-
-    const immer = produce(days, (draft: any) => {
+    // Atualiza o estado de forma acumulativa usando produce do immer
+    const updatedDays = produce(days, (draft: any) => {
       selectedHour.forEach((eachHour: any) => {
-        if (isPast(new Date(eachHour?.hour))) return;
+
+        if (!eachHour || isPast(new Date(eachHour?.hour))) return;
+
         const invertStatusOnClick =
           eachHour.status === "cart" ? "true" : "cart";
+
         const indexDay = draft.findIndex((day: any) =>
           isSameDay(day?.date, new Date(eachHour?.hour))
         );
+
         if (indexDay !== -1) {
-          const indexPast = draft[indexDay]?.hours?.findIndex((hour: any) =>
-            isPast(new Date(hour?.hour))
-          );
-          if (indexPast !== -1) {
-            /* alert(
-              `O horário ${toBrFullDate(
-                draft[indexDay].hours[indexPast].hour
-              )} foi removido do carrinho porque não está mais disponível}`
-            ); */
-            draft[indexDay].hours[indexPast].status = "null";
-          }
           const indexHour = draft[indexDay]?.hours?.findIndex(
             (hour: any) => hour?.id === eachHour?.id
           );
+
           if (indexHour !== -1) {
             draft[indexDay].hours[indexHour].status = invertStatusOnClick;
             draft[indexDay].hours[indexHour].selectedService =
               eachHour.selectedService || selectedService;
+          } else {
+            // Adicionar novo horário se não existir
+            draft[indexDay].hours.push({
+              ...eachHour,
+              status: invertStatusOnClick,
+              selectedService: eachHour.selectedService || selectedService,
+            });
           }
+        } else {
+          // Adicionar novo dia e horário se não existir
+          draft.push({
+            date: eachHour.date,
+            hours: [
+              {
+                ...eachHour,
+                status: invertStatusOnClick,
+                selectedService: eachHour.selectedService || selectedService,
+              },
+            ],
+          });
         }
       });
-    }) as any;
+    });
 
-    // console.log(immer);
+    setDays(updatedDays);
 
-    /* const state = [...diff, updatedDay]?.sort(
-      (a: any, b: any) => a.date - b.date
-    ); */
-    setDays(immer);
+    // Atualiza o carrinho global
+    const active = Array.isArray(updatedDays)
+      ? updatedDays.reduce((acc: any, cur: any) => {
+          const carts = cur.hours?.filter(
+            (hour: any) =>
+              hour.status === "cart" && isFuture(new Date(hour?.hour))
+          );
 
-    const active = immer?.reduce((acc: any, cur: any) => {
-      const carts = cur.hours?.filter(
-        (hour: any) => hour.status === "cart" && isFuture(new Date(hour?.hour))
-      );
-      if (carts) return [...acc, ...carts];
-      else return [...acc];
-    }, []);
+          if (carts && carts.length > 0) return [...acc, ...carts];
+          return acc;
+        }, [])
+      : [];
 
-    const filtered = immer?.filter(
-      (item: any) => item.expert?.id !== expert?.id && item.expert
-    );
+    const filtered = Array.isArray(updatedDays)
+      ? updatedDays.filter(
+          (item: any) => item.expert?.id !== expert?.id && item.expert
+        )
+      : [];
 
     const subTotalCartPrice = active.reduce((acc: any, cur: any) => {
       const price = user?.from_id
         ? +cur.selectedService?.credit_value || 0
         : +cur.selectedService?.price || 0;
-      // const price = +cur.selectedService?.price || 0;
       return (acc += price);
     }, 0);
 
@@ -160,9 +158,11 @@ export function Agenda({
   }, []);
 
   const updateDays = () => {
-    handleSelectHour(cartRaw?.map((raw: any) => raw.selectedHour));
+    const selectedHours = cartRaw?.map((raw: any) => raw.selectedHour);
+    if (selectedHours.length) {
+      handleSelectHour(selectedHours);
+    }
   };
-
   //FUNCAO MOVIDA PARA O ONLICK ACIMA
   /* useEffect(() => {
     const active = days?.reduce((acc: any, cur: any) => {
@@ -212,7 +212,7 @@ export function Agenda({
           zIndex: 0,
         }}
       >
-        {[...days].map((calendarDay: any, indexDay: any) => {
+        {[...days].slice(0, 7).map((calendarDay: any, indexDay: any) => {
           return (
             <VStack key={indexDay} zIndex={2}>
               <Text color={indexDay === 0 ? "amarelo" : "inherit"}>

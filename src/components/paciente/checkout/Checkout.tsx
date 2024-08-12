@@ -52,12 +52,9 @@ export function Checkout({
   const today = new Date();
   const [aPartirDe, setAPartirDe] = useState(today);
   const { onOpen, isOpen, onClose } = useDisclosure();
-  const {
-    onOpenAgendamentoConcluido,
-    onOpenPagamentoComPix,
+  const { onOpenAgendamentoConcluido, onOpenPagamentoComPix, user } =
+    useMyContext();
 
-    user,
-  } = useMyContext();
   const { cart, setCart, reset, filterCartRaw } = useCart();
 
   function handleRemoveCart(selected: any) {
