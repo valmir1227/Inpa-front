@@ -11,6 +11,7 @@ export function usePost(url: string, onSuccess?: any) {
   const [error, setError] = useState<any>(null);
 
   const cookies = new Cookies();
+
   async function handlePost(data: any) {
     try {
       setError(null);
@@ -24,12 +25,14 @@ export function usePost(url: string, onSuccess?: any) {
       });
       setData(response);
       onSuccess && onSuccess();
+
     } catch (err) {
       const scope = new Sentry.Scope();
       console.log("POST ERROR", err);
       scope.setTag("section", "usePost").setLevel("warning");
       setError(err);
       Sentry.captureException(err, scope);
+      
     } finally {
       setIsFetching(false);
     }

@@ -5,8 +5,11 @@ const store = (set) => ({
   /* days: [],
   setDays: (item) => set({ days: item }, false, "setDays"), */
   cart: [],
+
   setCart: (item) => set({ cart: item }, false, "setCart"),
+
   cartRaw: [],
+
   filterCartRaw: (item) =>
     set(
       ({ cartRaw }) => {
@@ -19,6 +22,7 @@ const store = (set) => ({
       false,
       "filterCartRaw"
     ),
+
   setCartRaw: (item) =>
     set(
       ({ cartRaw }) => {
@@ -36,6 +40,7 @@ const store = (set) => ({
       false,
       "setCartRaw"
     ),
+
   addToCart: (newItem) =>
     set((state) => ({ cart: [...state.cart, newItem] }), false, "addToCart"),
   reset: () => set({ cart: [], cartRaw: [] }, false, "reset"),

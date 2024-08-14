@@ -48,6 +48,7 @@ export function Login({ onOpenModalExcluir }: any) {
   // const handlePatient = () => setPatient(!patient);
 
   const [handlePost, data, error, isFetching] = usePost("/v2/auth/login");
+  
   const {
     register,
     handleSubmit,

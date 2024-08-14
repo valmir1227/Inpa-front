@@ -87,9 +87,6 @@ export function SinglePsicologos() {
       w="100%"
       gap={4}
       py={4}
-      layout
-      // initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
     >
       <Flex
         p={{ base: "1rem", md: "2rem" }}

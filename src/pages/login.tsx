@@ -31,6 +31,7 @@ export default function LoginPage() {
     onOpen: onOpenNovaSenha,
     onClose: onCloseNovaSenha,
   } = useDisclosure();
+  
   return (
     <>
       <Head>

@@ -5,6 +5,7 @@ import Cookies from "universal-cookie";
 import { useMyContext } from "../contexts/Context";
 import { api } from "../utils/api";
 import * as Sentry from "@sentry/react";
+
 export function useFetch(url: any, options?: any, startLoading?: boolean) {
   const [data, setData] = useState<any>();
   const [isFetching, setIsFetching] = useState(startLoading);
@@ -16,6 +17,7 @@ export function useFetch(url: any, options?: any, startLoading?: boolean) {
     setError(null);
     setData([]);
     setIsFetching(true);
+
     try {
       console.log(`######## API GET ${url}`);
       const token = getCookie("inpatoken");

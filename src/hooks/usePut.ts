@@ -10,18 +10,22 @@ export function usePut(url: string, onSuccess?: any) {
   const [errorPut, setErrorPut] = useState<any>(null);
 
   const cookies = new Cookies();
+
   async function handlePut(dataPut: any) {
+
     try {
       setDataPut([]);
       setErrorPut(null);
       console.log(`######## API PUT ${url}`);
       setIsPuting(true);
+
       const token = getCookie("inpatoken");
       const response = await api.put(url, dataPut, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setDataPut(response);
       onSuccess && onSuccess();
+      
     } catch (err) {
       setErrorPut(err);
 

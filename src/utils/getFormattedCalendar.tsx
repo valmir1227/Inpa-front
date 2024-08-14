@@ -3,6 +3,7 @@ import { add, format } from "date-fns";
 import { toBrDate } from "./toBrDate";
 
 export const getFormattedCalendar = (calendars: any) => {
+
   const empty7days = Array.from({ length: 7 }, (_, i) => ({
     date: format(add(new Date(), { days: i }), "yyyy-MM-dd"),
     hours: [],
@@ -33,6 +34,7 @@ export const getFormattedCalendar = (calendars: any) => {
     const { id, location } = calendar;
     const [y, m, d] = calendar.date.split("-");
     const arrayHours = Object.entries(calendar.hours);
+    
     const formatedHours = arrayHours
       .map((hour: any) => ({
         minutes: hour[0] * 60,

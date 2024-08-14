@@ -106,7 +106,7 @@ export function CartPopup() {
                 <VStack spacing={1} align="start">
                   <Text>{item?.expert?.name}</Text>
                   {item?.expert?.councils?.map((council: any) => (
-                    <Text key={council.id} fontSize={12}>
+                    <Text key={council.number} fontSize={12}>
                       {council?.council} - {council?.number}
                     </Text>
                   ))}

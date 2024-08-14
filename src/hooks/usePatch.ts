@@ -4,13 +4,16 @@ import { useState } from "react";
 import Cookies from "universal-cookie";
 import { api } from "../utils/api";
 import * as Sentry from "@sentry/react";
+
 export function usePatch(url: string, onSuccess?: any) {
   const [data, setData] = useState<any>([]);
   const [isFetching, setIsFetching] = useState<boolean>(false);
   const [error, setError] = useState<any>(null);
 
   const cookies = new Cookies();
+
   async function handlePatch(data: any) {
+
     try {
       setData([]);
       setError(null);
@@ -20,6 +23,7 @@ export function usePatch(url: string, onSuccess?: any) {
       const response = await api.patch(url, data, {
         headers: { Authorization: `Bearer ${token}` },
       });
+
       setData(response);
       onSuccess && onSuccess();
     } catch (err) {
