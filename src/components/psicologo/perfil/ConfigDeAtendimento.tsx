@@ -43,11 +43,15 @@ export function ConfigDeAtendimento() {
   );
 
   const arrayTags = dataTag?.map((tag: any) => tag.name) || [];
+
   const defaultArrayTags = dataExpert?.tags?.map((tag: any) => tag.name) || [];
+
   const [selectedTags, setSelectedTags] = useState([]);
+
   useEffect(() => {
     setSelectedTags(defaultArrayTags);
   }, [dataExpert, dataTag]);
+
   const selectedTagsToIds = selectedTags?.map(
     (sellectedTag: any) =>
       dataTag?.find((item: any) => sellectedTag === item?.name)?.id
@@ -55,11 +59,14 @@ export function ConfigDeAtendimento() {
 
   const arraySpecialties =
     dataSpecialty?.map((specialty: any) => specialty.name) || [];
+
   const defaultSpecialties =
     dataExpert?.specialties?.map((specialty: any) => specialty.name) || [];
+
   const [selectedSpecialties, setSelectedSpecialties] = useState(
     defaultSpecialties || []
   );
+
   const selectedSpecialtiesToIds = selectedSpecialties?.map(
     (sellectedSpecialty: any) =>
       dataSpecialty?.find((item: any) => sellectedSpecialty === item?.name)?.id
@@ -67,11 +74,14 @@ export function ConfigDeAtendimento() {
 
   const arrayApproaches =
     dataApproach?.map((approach: any) => approach.name) || [];
+
   const defaultApproaches =
     dataExpert?.approaches?.map((approach: any) => approach.name) || [];
+
   const [selectedApproaches, setSelectedApproaches] = useState(
     defaultApproaches || []
   );
+  
   const selectedApproachesToIds = selectedApproaches?.map(
     (sellectedApproach: any) =>
       dataApproach?.find((item: any) => sellectedApproach === item?.name)?.id

@@ -35,11 +35,13 @@ export function ContextProvider({ children }: SidebarDrawerProvider) {
   // const [cart, setCart] = useState([]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  
   const {
     onOpen: onOpenAgendamentoConcluido,
     isOpen: isOpenAgendamentoConcluido,
     onClose: onCloseAgendamentoConcluido,
   } = useDisclosure();
+
   const {
     onOpen: onOpenPagamentoComPix,
     isOpen: isOpenPagamentoComPix,

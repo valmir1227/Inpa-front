@@ -70,6 +70,7 @@ export function Carteira({ appointmentData }: any) {
   ] = useFetch(urlFetch, null, true);
 
   const { isOpen, onToggle } = useDisclosure();
+  
   const {
     isOpen: isOpenPagamento,
     onOpen: onOpenPagamento,

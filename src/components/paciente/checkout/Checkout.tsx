@@ -55,7 +55,8 @@ export function Checkout({
   const { onOpenAgendamentoConcluido, onOpenPagamentoComPix, user } =
     useMyContext();
 
-  const { cart, setCart, reset, filterCartRaw } = useCart();
+    
+    const { cart, setCart, reset, filterCartRaw } = useCart();
 
   function handleRemoveCart(selected: any) {
     //recria os carrinhos de cada expert

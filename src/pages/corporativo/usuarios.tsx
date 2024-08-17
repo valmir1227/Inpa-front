@@ -13,6 +13,7 @@ import { Sessoes } from "../../components/psicologo/sessoes/Sessoes";
 
 export default function ColaboradoresPage() {
   const { user } = useMyContext();
+  
   const [
     handlePostPreRegister,
     dataPreRegister,

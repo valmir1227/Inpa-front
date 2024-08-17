@@ -76,7 +76,6 @@ export function Agenda({
     // Atualiza o estado de forma acumulativa usando produce do immer
     const updatedDays = produce(days, (draft: any) => {
       selectedHour.forEach((eachHour: any) => {
-
         if (!eachHour || isPast(new Date(eachHour?.hour))) return;
 
         const invertStatusOnClick =

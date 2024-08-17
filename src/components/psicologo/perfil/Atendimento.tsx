@@ -74,6 +74,7 @@ export function Atendimento({ loading = false, setEtapaPerfil = false }: any) {
   const [casal, setCasal] = useState(150);
   const [familiar, setFamiliar] = useState(200);
   const [grupo, setGrupo] = useState<any>([]);
+
   useEffect(() => {
     setGrupo(experts);
     setInfantil(
@@ -81,21 +82,25 @@ export function Atendimento({ loading = false, setEtapaPerfil = false }: any) {
         (expertService: any) => expertService.name === "Psicoterapia Infantil"
       )?.price || 100
     );
+
     setIndividual(
       +expertsServices.find(
         (expertService: any) => expertService.name === "Psicoterapia Individual"
       )?.price || 100
     );
+
     setCasal(
       +expertsServices.find(
         (expertService: any) => expertService.name === "Psicoterapia Casal"
       )?.price || 150
     );
+
     setFamiliar(
       +expertsServices.find(
         (expertService: any) => expertService.name === "Psicoterapia Familiar"
       )?.price || 200
     );
+    
   }, [dataExpert]);
 
   const targets = [

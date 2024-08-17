@@ -180,15 +180,16 @@ export function Cupons() {
               boxSize={4}
               variant="ghost"
               aria-label="editar"
-              as={EditIcon}
+              icon={<EditIcon />}
               _hover={{ cursor: "pointer", color: "azul" }}
               onClick={() => push({ query: { action: "edit", id: item.id } })}
             />
+
             <IconButton
               boxSize={4}
               variant="ghost"
               aria-label="delete"
-              as={BsTrash}
+              icon={<BsTrash />}
               _hover={{ cursor: "pointer", color: "vermelho" }}
               onClick={() =>
                 push({ query: { action: "delete", id: item.code } })
