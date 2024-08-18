@@ -20,6 +20,7 @@ export default function CarteiraPage() {
   useEffect(() => {
     if (user?.id) getAppointment();
   }, [user]);
+  
   return (
     <>
       <Head>

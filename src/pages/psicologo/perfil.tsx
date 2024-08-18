@@ -17,6 +17,7 @@ export default function PerfilPage() {
   // const { user } = useMyContext();
   const [etapaPerfil, setEtapaPerfil] = useState("home");
   const { user } = useUsers();
+  
   const {
     data: dataExpert,
     error: errorExpert,

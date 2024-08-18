@@ -27,12 +27,14 @@ export default function HorariosPage() {
   const [dataExpert, errorExpert, isFetchingExpert, getExpert] = useFetch(
     `/v1/experts/${user?.id}`
   );
+
   useEffect(() => {
     if (user?.id) {
       getExpert();
       getCRP();
     }
   }, [user]);
+  
   return (
     <>
       <Head>

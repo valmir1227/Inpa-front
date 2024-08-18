@@ -55,8 +55,7 @@ export function Checkout({
   const { onOpenAgendamentoConcluido, onOpenPagamentoComPix, user } =
     useMyContext();
 
-    
-    const { cart, setCart, reset, filterCartRaw } = useCart();
+  const { cart, setCart, reset, filterCartRaw } = useCart();
 
   function handleRemoveCart(selected: any) {
     //recria os carrinhos de cada expert
@@ -132,11 +131,16 @@ export function Checkout({
   const priceWithDiscount = () => {
     if (dataCoupon?.status !== "active" || !validCoupon.status)
       return totalCartPrice;
-    if (isPercent) return totalCartPrice - discount();
-    else return totalCartPrice - +validCoupon.discount;
+
+    const calculatedDiscount = discount();
+    const finalPrice = totalCartPrice - calculatedDiscount;
+
+    return finalPrice > 0 ? finalPrice : 0;
   };
 
   const { handlePostOrder, dataOrder, errorOrder, isFetchingOrder } = orderData;
+
+  console.log("ODERDATA", orderData)
 
   useEffect(() => {
     if (dataOrder.status === 201) {
