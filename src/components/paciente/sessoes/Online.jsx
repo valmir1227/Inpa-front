@@ -46,6 +46,7 @@ import { Prontuario } from "components/paciente/sessoes/online/Prontuario";
 import { toBrDate } from "utils/toBrDate";
 import { toBrFullDate } from "utils/toBrDate";
 import { differenceInSeconds } from "date-fns";
+import ModalAvaliarExpert from "./ModalAvaliarExpert";
 
 let htmlToDraft = null;
 if (typeof window === "object") {
@@ -66,8 +67,6 @@ export function Online({ type, dataAppointment }) {
   const { register, reset, handleSubmit, watch } = useForm({
     defaultValues: { notes },
   });
-
-  console.log(watch());
 
   const {
     data: dataMedicalRecords,
@@ -177,6 +176,18 @@ export function Online({ type, dataAppointment }) {
     return null; //return nothing on the server-side
   }
 
+  const {
+    onOpen: onOpenAvaliarModal,
+    isOpen: isOpenAvaliarModal,
+    onClose: onCloseAvaliarModal,
+  } = useDisclosure();
+
+  useEffect(() => {
+    if (data.status === "Finished" || data.status === "Finished(auto)") {
+      onOpenAvaliarModal();
+    }
+  }, [data, status]);
+
   const finishedSession =
     data.status === "Finished" ||
     data.status === "Finished(auto)" ||
@@ -188,11 +199,6 @@ export function Online({ type, dataAppointment }) {
     dataAppointment.data.status !== "Absent" &&
     dataAppointment.data.status !== "Reserved" &&
     dataAppointment.data.status !== "Canceled";
-
-  /* console.log(firstMedicalRecord?.notes);
-  console.log(notes?.getCurrentContent());
-  console.log("DRAF", draft);
-  console.log(firstMedicalRecord?.notes === draft); */
 
   return (
     <Flex
@@ -319,6 +325,13 @@ export function Online({ type, dataAppointment }) {
           }
         />
       )}
+
+      <ModalAvaliarExpert
+        isOpen={isOpenAvaliarModal}
+        onClose={onCloseAvaliarModal}
+        data={data}
+        dataAppointment={dataAppointment}
+      />
     </Flex>
   );
 }
@@ -399,7 +412,7 @@ const Card = ({
           frameBorder="0"
           allow="microphone; camera"
           allowFullScreen
-          sandbox="allow-same-origin allow-scripts allow-forms" 
+          sandbox="allow-same-origin allow-scripts allow-forms"
         ></iframe>
       </Box>
       {isExpert && dataFinishOpenVidu?.status !== 200 && (
@@ -459,8 +472,10 @@ const Card = ({
 const Cronometro = ({ lastRender, saveMedicalRecord, shouldStart }) => {
   const [now, setNow] = useState();
   const seconds = differenceInSeconds(now, lastRender);
+
   useEffect(() => {
     let interval;
+
     if (shouldStart)
       interval = setInterval(() => {
         console.log("INTERVAL");

@@ -34,6 +34,7 @@ import {
 } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { LoadingInpa } from "components/global/Loading";
+import { date } from "zod";
 
 export function Agenda({
   selectedDay,
@@ -44,7 +45,7 @@ export function Agenda({
   setIsDirty,
 }: any) {
   const { user } = useMyContext();
-
+  
   const [today, setToday] = useState(new Date());
 
   useEffect(() => {
@@ -121,7 +122,7 @@ export function Agenda({
 
           return (
             <Memoized
-              key={day.date}
+              key={day.date.getTime()}
               day={day}
               indexDay={indexDay}
               handleSelectHour={handleSelectHour}
@@ -136,6 +137,8 @@ export function Agenda({
 
 const Dia = (props: any) => {
   const { day, indexDay, handleSelectHour, isFetchingCalendars } = props;
+
+  console.log(day.date)
   return (
     <VStack key={day.date} zIndex={2}>
       <Text

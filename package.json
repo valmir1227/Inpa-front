@@ -32,7 +32,7 @@
     "date-fns": "^2.29.3",
     "draft-js": "^0.11.7",
     "draftjs-to-html": "^0.9.1",
-    "framer-motion": "^11.0.5",
+    "framer-motion": "^11.3.28",
     "html-to-draftjs": "^1.5.0",
     "immer": "^10.0.2",
     "jquery": "^3.6.3",

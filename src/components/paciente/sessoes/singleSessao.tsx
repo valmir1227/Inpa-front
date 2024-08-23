@@ -39,6 +39,7 @@ export function SingleSessao({
   const { user } = useMyContext();
   const { formattedData, data, error, isFetching, isValidating, get } =
     dataAppointment;
+
   const {
     dataParticipant,
     errorParticipant,
@@ -67,6 +68,7 @@ export function SingleSessao({
     isOpen: isOpenModalCancelApp,
     onClose: onCloseModalCancelApp,
   } = useDisclosure();
+
   const {
     onOpen: onOpenModalAdicionar,
     isOpen: isOpenModalAdicionar,
@@ -80,6 +82,7 @@ export function SingleSessao({
 
   const [selectedAppointmentParticipant, setSelectedAppointmentParticipant] =
     useState({} as any);
+    
   const [appointmentParticipants, setAppointmentParticipants] = useState(
     [] as any
   );

@@ -335,7 +335,7 @@ export function Checkout({
                       <VStack spacing={1} align="start">
                         <Text>{expertCart.expert.name}</Text>
                         {expertCart?.expert.councils?.map((council: any) => (
-                          <Text key={council.id} fontSize={12}>
+                          <Text key={council.number} fontSize={12}>
                             {council?.council} - {council?.number}
                           </Text>
                         ))}
