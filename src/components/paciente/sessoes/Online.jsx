@@ -63,6 +63,8 @@ const ZoomMeetings = dynamic(
 export function Online({ type, dataAppointment }) {
   const { user } = useMyContext();
   const isExpert = type === "expert";
+  const isPatient = (type = "Patient");
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const { data } = dataAppointment;
   const { register, reset, handleSubmit, watch } = useForm({
     defaultValues: { notes },
@@ -175,18 +177,6 @@ export function Online({ type, dataAppointment }) {
   if (typeof window === "undefined") {
     return null; //return nothing on the server-side
   }
-
-  const {
-    onOpen: onOpenAvaliarModal,
-    isOpen: isOpenAvaliarModal,
-    onClose: onCloseAvaliarModal,
-  } = useDisclosure();
-
-  useEffect(() => {
-    if (data.status === "Finished" || data.status === "Finished(auto)") {
-      onOpenAvaliarModal();
-    }
-  }, [data, status]);
 
   const finishedSession =
     data.status === "Finished" ||
@@ -325,13 +315,6 @@ export function Online({ type, dataAppointment }) {
           }
         />
       )}
-
-      <ModalAvaliarExpert
-        isOpen={isOpenAvaliarModal}
-        onClose={onCloseAvaliarModal}
-        data={data}
-        dataAppointment={dataAppointment}
-      />
     </Flex>
   );
 }
@@ -391,14 +374,12 @@ const Card = ({
           isFetchingOvToken={isFetchingOvToken}
         />
       )} */}
-
       <Jitsi
         dataOvToken={dataOvToken}
         isFetchingOvToken={isFetchingOvToken}
         data={data}
         health={health}
       />
-
       {/* <ZoomMeetings
         dataOvToken={dataOvToken}
         health={health}
@@ -445,7 +426,6 @@ const Card = ({
           text: "Sessão finalizada com sucesso",
         }}
       />
-
       <IconButton
         size="sm"
         color="white"
@@ -456,10 +436,8 @@ const Card = ({
         m={2}
         onClick={onOpenReportModal}
       />
-
       {/* {isFamiliar && <InviteUsers />} */}
-      {isFamiliar && <InviteUsersJitsi />}
-
+      {isFamiliar && <InviteUsersJitsi />}x1
       <ModalReport
         isOpenReportModal={isOpenReportModal}
         onCloseReportModal={onCloseReportModal}

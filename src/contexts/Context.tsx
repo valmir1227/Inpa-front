@@ -24,8 +24,8 @@ type ContextProviderProps = {
 export function ContextProvider({ children }: SidebarDrawerProvider) {
   const [user, setUser] = useState();
   const [dataGetMe, errorGetMe, isFetchingGetMe, getMe] =
-    useFetch("/v1/users/me");
-
+  useFetch("/v1/users/me");
+  
   useEffect(() => {
     if (dataGetMe) {
       setUser(dataGetMe);

@@ -49,6 +49,7 @@ import queryString from "query-string";
 export function Psicologos() {
   const router = useRouter();
   const { user } = useMyContext();
+
   const today = startOfDay(new Date()).toISOString();
   const {
     register,

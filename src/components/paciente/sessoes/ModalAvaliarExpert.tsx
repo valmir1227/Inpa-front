@@ -35,16 +35,16 @@ function ModalAvaliarExpert({ isOpen, onClose, data, dataAppointment }: any) {
     setFeedback(event.target.value);
   };
 
+  // Função para enviar a avaliação
   const handleSubmit = () => {
-    // Função para enviar a avaliação
     console.log({
       rating,
       feedback,
-      appointmentId: dataAppointment?.id,
-      expertId: data?.id,
+     // appointmentId: dataAppointment?.id,
+    //  expertId: data?.id,
     });
     router.push("/paciente/sessoes");
-    onClose(); // Fecha o modal após o envio
+    onClose(); 
   };
 
   return (
@@ -59,8 +59,7 @@ function ModalAvaliarExpert({ isOpen, onClose, data, dataAppointment }: any) {
           <ModalCloseButton />
           <ModalBody>
             <Text mb={4} fontSize="medium" color={"cinzaescuro"}>
-              Nos conte qual foi o grau de satisfação que você teve com esse
-              profissional.
+            Deixe sua avaliação sobre esta sessão.
             </Text>
             <Box mb={4}>
               <Box
@@ -101,7 +100,7 @@ function ModalAvaliarExpert({ isOpen, onClose, data, dataAppointment }: any) {
                     <Text mt={1} fontSize="x-small">
                       {value === 1 && "Péssimo"}
                       {value === 2 && "Ruim"}
-                      {value === 3 && "Razoável"}
+                      {value === 3 && "Neutro"}
                       {value === 4 && "Bom"}
                       {value === 5 && "Excelente"}
                     </Text>

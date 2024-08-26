@@ -57,7 +57,7 @@ import {
   FiSun,
   FiUser,
 } from "react-icons/fi";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { LogoSvg } from "../icons";
 import Image from "next/image";
 import Router, { useRouter } from "next/router";
@@ -76,13 +76,19 @@ import { AlertInpa } from "./global/Alert";
 import { useUsers } from "../stores/useUser";
 import * as Sentry from "@sentry/nextjs";
 import { userAgent } from "next/server";
+import ModalAvaliarExpert from "./paciente/sessoes/ModalAvaliarExpert";
 
 export function Header({ type }: any) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isOpenModalAvaliarExpert,
+    onOpen: onOpenModalAvaliarExpert,
+    onClose: onCloseModalAvaliarExpert,
+  } = useDisclosure();
+
   const router = useRouter();
-
+  const [sessionEnded, setSessionEnded] = useState(false);
   const disabled = router.query.online !== undefined;
-
   const { councils, user } = useUsers();
 
   Sentry.setUser({
@@ -101,10 +107,30 @@ export function Header({ type }: any) {
   // const userProfileNeedsToUpdate = user?.id && !user.profile_updated_at;
   const userProfileNeedsToUpdate = user?.id && user?.profile_updated === false;
 
+  useEffect(() => {
+    if (type === "paciente") {
+      const handleRouteChange = (url: string) => {
+        if (url === `/paciente/sessoes/${router.query.id}`) {
+          if (sessionEnded) {
+            onOpenModalAvaliarExpert();
+            setSessionEnded(false);
+          }
+        } else {
+          setSessionEnded(true);
+        }
+      };
+
+      router.events.on("routeChangeComplete", handleRouteChange);
+      return () => {
+        router.events.off("routeChangeComplete", handleRouteChange);
+      };
+    }
+  }, [router.query.id, onOpenModalAvaliarExpert, type, sessionEnded]);
   const BackButton = () => {
-    const confirmRouterBack = () => {
-      if (confirm("Deseja voltar? Você será desconectado da sessão."))
+    const handleSessionEnd = () => {
+      if (confirm("Deseja voltar? Você será desconectado da sessão.")) {
         router.push(`/${type}/sessoes/${router.query.id}`);
+      }
     };
     const confirmRefresh = () => {
       if (confirm("Deseja recarregar a página?")) router.reload();
@@ -114,7 +140,7 @@ export function Header({ type }: any) {
     return (
       <HStack p={2}>
         <Button title={<FiRefreshCcw />} onClick={confirmRefresh} />
-        <Button title="Voltar" onClick={confirmRouterBack} />
+        <Button title="Voltar" onClick={handleSessionEnd} />
       </HStack>
     );
   };
@@ -130,6 +156,12 @@ export function Header({ type }: any) {
         as="header"
       >
         <BackButton />
+        {type === "paciente" && isOpenModalAvaliarExpert && (
+          <ModalAvaliarExpert
+            isOpen={isOpenModalAvaliarExpert}
+            onClose={onCloseModalAvaliarExpert}
+          />
+        )}
         <Flex
           hidden={disabled}
           px="1rem"
