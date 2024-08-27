@@ -15,17 +15,33 @@ import {
 import { darken } from "@chakra-ui/theme-tools";
 import { useTheme } from "@emotion/react";
 import { Header } from "components/Header";
+import { useFetch } from "hooks/useFetch";
 import Head from "next/head";
 import Router, { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AiOutlineFrown, AiOutlineMeh, AiOutlineSmile } from "react-icons/ai";
 import { FaRegGrinStars, FaRegSadTear } from "react-icons/fa";
+import useSWR from "swr";
+import { fetcher } from "utils/api";
 
-function ModalAvaliarExpert({ isOpen, onClose, data, dataAppointment }: any) {
-  const theme = useTheme();
+function ModalAvaliarExpert({ isOpen, onClose }: any) {
+  const router = useRouter();
   const [rating, setRating] = useState(null);
   const [feedback, setFeedback] = useState("");
-  const router = useRouter();
+  
+  const {
+    data,
+    error,
+    isLoading: isFetching,
+    isValidating,
+    mutate: get,
+  } = useSWR(
+    router.query.id ? `v1/appointments/${router.query.id}` : null,
+    fetcher,
+    { revalidateOnFocus: false }
+  );
+ 
+  console.log("DATAAPPOINTMEN", data)
 
   const handleRating = (value: any) => {
     setRating(value);
@@ -40,11 +56,11 @@ function ModalAvaliarExpert({ isOpen, onClose, data, dataAppointment }: any) {
     console.log({
       rating,
       feedback,
-     // appointmentId: dataAppointment?.id,
-    //  expertId: data?.id,
+      // appointmentId: dataAppointment?.id,
+      //  expertId: data?.id,
     });
     router.push("/paciente/sessoes");
-    onClose(); 
+    onClose();
   };
 
   return (
@@ -59,7 +75,7 @@ function ModalAvaliarExpert({ isOpen, onClose, data, dataAppointment }: any) {
           <ModalCloseButton />
           <ModalBody>
             <Text mb={4} fontSize="medium" color={"cinzaescuro"}>
-            Deixe sua avaliação sobre esta sessão.
+              Deixe sua avaliação sobre esta sessão.
             </Text>
             <Box mb={4}>
               <Box

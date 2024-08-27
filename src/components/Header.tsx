@@ -126,6 +126,7 @@ export function Header({ type }: any) {
       };
     }
   }, [router.query.id, onOpenModalAvaliarExpert, type, sessionEnded]);
+
   const BackButton = () => {
     const handleSessionEnd = () => {
       if (confirm("Deseja voltar? Você será desconectado da sessão.")) {
@@ -147,84 +148,88 @@ export function Header({ type }: any) {
 
   return (
     <>
-      <Flex
-        direction="column"
-        justify="center"
-        align="center"
-        w="100%"
-        bg="white"
-        as="header"
-      >
-        <BackButton />
-        {type === "paciente" && isOpenModalAvaliarExpert && (
-          <ModalAvaliarExpert
-            isOpen={isOpenModalAvaliarExpert}
-            onClose={onCloseModalAvaliarExpert}
-          />
-        )}
+      {type === "paciente" && isOpenModalAvaliarExpert && (
+        <ModalAvaliarExpert
+          isOpen={isOpenModalAvaliarExpert}
+          onClose={onCloseModalAvaliarExpert}
+        />
+      )}
+      {!isOpenModalAvaliarExpert && (
         <Flex
-          hidden={disabled}
-          px="1rem"
-          w="full"
+          direction="column"
+          justify="center"
           align="center"
-          maxW={1200}
-          justify="space-between"
+          w="100%"
+          bg="white"
+          as="header"
         >
-          <Link href="/" passHref>
-            <a>
-              <Image
-                src="/logo-1-3.png"
-                alt="Logo Inpa"
-                width={130}
-                height={70}
-              />
-            </a>
-          </Link>
-          <HStack
-            color="cinzaescuro"
-            display={{ base: "none", md: "flex" }}
-            spacing={6}
+          <BackButton />
+
+          <Flex
+            hidden={disabled}
+            px="1rem"
+            w="full"
+            align="center"
+            maxW={1200}
+            justify="space-between"
           >
-            <Menu type={type} />
-          </HStack>
-          <HStack
-            color="cinzaescuro"
-            display={{ base: "none", md: "flex" }}
-            spacing={10}
+            <Link href="/" passHref>
+              <a>
+                <Image
+                  src="/logo-1-3.png"
+                  alt="Logo Inpa"
+                  width={130}
+                  height={70}
+                />
+              </a>
+            </Link>
+            <HStack
+              color="cinzaescuro"
+              display={{ base: "none", md: "flex" }}
+              spacing={6}
+            >
+              <Menu type={type} />
+            </HStack>
+            <HStack
+              color="cinzaescuro"
+              display={{ base: "none", md: "flex" }}
+              spacing={10}
+            >
+              <UserInfo type={type} />
+            </HStack>
+            <IconButton
+              aria-label="Abrir menu de navegação"
+              onClick={onOpen}
+              display={{ base: "flex", md: "none" }}
+              my={6}
+              variant="ghost"
+            >
+              <HamburgerIcon boxSize={6} />
+            </IconButton>
+          </Flex>
+
+          <Drawer
+            autoFocus={false}
+            returnFocusOnClose={false}
+            isOpen={isOpen}
+            placement="right"
+            onClose={onClose}
           >
-            <UserInfo type={type} />
-          </HStack>
-          <IconButton
-            aria-label="Abrir menu de navegação"
-            onClick={onOpen}
-            display={{ base: "flex", md: "none" }}
-            my={6}
-            variant="ghost"
-          >
-            <HamburgerIcon boxSize={6} />
-          </IconButton>
+            <DrawerOverlay />
+            <DrawerContent>
+              <DrawerCloseButton m={3} />
+
+              <DrawerBody>
+                <VStack mt={10}>
+                  <Menu type={type} />
+                  <UserInfo type={type} />
+                </VStack>
+              </DrawerBody>
+            </DrawerContent>
+          </Drawer>
         </Flex>
-
-        <Drawer
-          autoFocus={false}
-          returnFocusOnClose={false}
-          isOpen={isOpen}
-          placement="right"
-          onClose={onClose}
-        >
-          <DrawerOverlay />
-          <DrawerContent>
-            <DrawerCloseButton m={3} />
-
-            <DrawerBody>
-              <VStack mt={10}>
-                <Menu type={type} />
-                <UserInfo type={type} />
-              </VStack>
-            </DrawerBody>
-          </DrawerContent>
-        </Drawer>
-      </Flex>
+      )}
+      
       {(expertMissingCouncils || expertMissingPhoto) && (
         <Flex w="full" align="center" justify="center" bg="#f5f5f5">
           <Alert status="warning" justifyContent="center">

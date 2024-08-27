@@ -140,8 +140,6 @@ export function Checkout({
 
   const { handlePostOrder, dataOrder, errorOrder, isFetchingOrder } = orderData;
 
-  console.log("ODERDATA", orderData)
-
   useEffect(() => {
     if (dataOrder.status === 201) {
       if (

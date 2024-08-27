@@ -43,10 +43,7 @@ import { ModalReport } from "components/paciente/sessoes/online/ModalReport";
 import { Jitsi } from "components/paciente/sessoes/online/Jitsi";
 import { InviteUsersJitsi } from "components/paciente/sessoes/online/InviteUsersJitsi";
 import { Prontuario } from "components/paciente/sessoes/online/Prontuario";
-import { toBrDate } from "utils/toBrDate";
-import { toBrFullDate } from "utils/toBrDate";
 import { differenceInSeconds } from "date-fns";
-import ModalAvaliarExpert from "./ModalAvaliarExpert";
 
 let htmlToDraft = null;
 if (typeof window === "object") {
@@ -63,8 +60,6 @@ const ZoomMeetings = dynamic(
 export function Online({ type, dataAppointment }) {
   const { user } = useMyContext();
   const isExpert = type === "expert";
-  const isPatient = (type = "Patient");
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const { data } = dataAppointment;
   const { register, reset, handleSubmit, watch } = useForm({
     defaultValues: { notes },
