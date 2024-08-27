@@ -82,7 +82,7 @@ export function SingleSessao({
 
   const [selectedAppointmentParticipant, setSelectedAppointmentParticipant] =
     useState({} as any);
-    
+
   const [appointmentParticipants, setAppointmentParticipants] = useState(
     [] as any
   );
@@ -224,13 +224,15 @@ export function SingleSessao({
                 hoursLeft > 1 ||
                 hoursLeft < -2 ||
                 data?.status === "Canceled" ||
-                data?.status === "Reserved"
+                data?.status === "Reserved" ||
+                data?.status === "Finished"
               }
               title="Iniciar sessão"
             />
             {process.env.NODE_ENV === "development" && (
               <ButtonLink
                 href={`/paciente/sessoes/${data.id}?online`}
+                isDisabled={false}
                 title="Iniciar sessão DEV"
               />
             )}

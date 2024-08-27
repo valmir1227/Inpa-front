@@ -24,6 +24,37 @@ import { LoadingInpa } from "components/global/Loading";
 import { BASE_URL } from "utils/CONFIG";
 import { useMyContext } from "contexts/Context";
 
+function calculateAverageRating(ratings: number[]): number {
+  if (ratings.length === 0) return 0;
+  const total = ratings.reduce(
+    (acc: number, rating: number) => acc + rating,
+    0
+  );
+  return parseFloat((total / ratings.length).toFixed(1));
+}
+
+function renderStarts(average: any) {
+  const fullStars = Math.floor(average);
+  const hasHalfStar = average % 1 !== 0;
+  const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+
+  return (
+    <>
+      {Array(fullStars)
+        .fill(0)
+        .map((_, index) => (
+          <StarIcon key={`full-${index}`} boxSize="14px" color="amarelo" />
+        ))}
+      {hasHalfStar && <StarIcon key="half" boxSize="14px" color="amarelo" />}
+      {Array(emptyStars)
+        .fill(0)
+        .map((_, index) => (
+          <StarIcon key={`empty-${index}`} boxSize="14px" color="gray.300" />
+        ))}
+    </>
+  );
+}
+
 export function CardPsicologo({ expert, isFetchingExpert, initialDate }: any) {
   const { user } = useMyContext();
   const today = new Date();
@@ -60,6 +91,10 @@ export function CardPsicologo({ expert, isFetchingExpert, initialDate }: any) {
   useEffect(() => {
     if (!selectedService.id) setSelectedService(servicesSorted[0]);
   }, [expert]);
+
+  // Dados estáticos de avaliações
+  const ratings = [1, 3, 4, 4, 5, 5, 4, 4, 3, 3, 3, 3, 2, 3, 4, 3, 5, 2];
+  const averageRating = calculateAverageRating(ratings);
 
   return (
     <Flex
@@ -100,14 +135,14 @@ export function CardPsicologo({ expert, isFetchingExpert, initialDate }: any) {
                 {genderAndAge}
               </Text>
             </HStack>
-            <HStack pt={3} spacing={2} color="cinza">
-              <StarIcon boxSize="14px" />
-              <StarIcon boxSize="14px" />
-              <StarIcon boxSize="14px" />
-              <StarIcon boxSize="14px" />
-              <StarIcon boxSize="14px" />
+            <HStack pt={3} spacing={2} color="amarelo">
+              {renderStarts(averageRating)}
               <Text fontSize={12} pl={4}>
-                0 avaliações
+                {ratings.length === 0
+                  ? "0 Avaliações"
+                  : ratings.length === 1
+                  ? "1 Avaliação"
+                  : ratings.length + " Avaliações"}
               </Text>
             </HStack>
             <VStack spacing={4} pt={5} align="start" fontSize={12}>

@@ -37,23 +37,19 @@ const ButtonLink = forwardRef<HTMLAnchorElement, any>(
       target,
       alignSelf = "center",
       ...rest
-    }: any,
+    },
     ref
   ) => {
-    if (disabled) {
-      return (
-        <Button
-          isDisabled={disabled || isDisabled}
-          disabled={disabled || isDisabled}
-          {...rest}
-        />
-      );
+    const isButtonDisabled = disabled || isDisabled;
+
+    if (isButtonDisabled) {
+      return <Button isDisabled={isButtonDisabled} {...rest} />;
     }
 
     return (
       <Link href={href} passHref>
         <ChakraLink alignSelf={alignSelf} target={target} ref={ref}>
-          <Button {...rest} />
+          <Button isDisabled={isButtonDisabled} {...rest} />
         </ChakraLink>
       </Link>
     );

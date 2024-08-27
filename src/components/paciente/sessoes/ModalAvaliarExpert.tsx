@@ -41,8 +41,6 @@ function ModalAvaliarExpert({ isOpen, onClose }: any) {
     { revalidateOnFocus: false }
   );
  
-  console.log("DATAAPPOINTMEN", data)
-
   const handleRating = (value: any) => {
     setRating(value);
   };
