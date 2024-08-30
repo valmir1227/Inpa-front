@@ -104,7 +104,6 @@ export function Header({ type }: any) {
   const expertMissingCouncils =
     user?.permissions?.expert && councils.length === 0;
 
-  // const userProfileNeedsToUpdate = user?.id && !user.profile_updated_at;
   const userProfileNeedsToUpdate = user?.id && user?.profile_updated === false;
 
   useEffect(() => {
@@ -113,9 +112,7 @@ export function Header({ type }: any) {
         if (url === `/paciente/sessoes/${router.query.id}`) {
           if (sessionEnded) {
             onOpenModalAvaliarExpert();
-            setSessionEnded(false);
           }
-        } else {
           setSessionEnded(true);
         }
       };
@@ -148,7 +145,7 @@ export function Header({ type }: any) {
 
   return (
     <>
-      {type === "paciente" && isOpenModalAvaliarExpert && (
+      {type === "paciente" && isOpenModalAvaliarExpert && sessionEnded === true && (
         <ModalAvaliarExpert
           isOpen={isOpenModalAvaliarExpert}
           onClose={onCloseModalAvaliarExpert}
@@ -229,7 +226,7 @@ export function Header({ type }: any) {
           </Drawer>
         </Flex>
       )}
-      
+
       {(expertMissingCouncils || expertMissingPhoto) && (
         <Flex w="full" align="center" justify="center" bg="#f5f5f5">
           <Alert status="warning" justifyContent="center">

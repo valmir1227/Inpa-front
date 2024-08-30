@@ -13,12 +13,11 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import { darken } from "@chakra-ui/theme-tools";
-import { useTheme } from "@emotion/react";
 import { Header } from "components/Header";
-import { useFetch } from "hooks/useFetch";
-import Head from "next/head";
-import Router, { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { AlertInpa } from "components/global/Alert";
+import { usePost } from "hooks/usePost";
+import { useRouter } from "next/router";
+import { useState } from "react";
 import { AiOutlineFrown, AiOutlineMeh, AiOutlineSmile } from "react-icons/ai";
 import { FaRegGrinStars, FaRegSadTear } from "react-icons/fa";
 import useSWR from "swr";
@@ -26,39 +25,46 @@ import { fetcher } from "utils/api";
 
 function ModalAvaliarExpert({ isOpen, onClose }: any) {
   const router = useRouter();
-  const [rating, setRating] = useState(null);
-  const [feedback, setFeedback] = useState("");
-  
-  const {
-    data,
-    error,
-    isLoading: isFetching,
-    isValidating,
-    mutate: get,
-  } = useSWR(
+  const [rate, setRate] = useState(null);
+  const [rateComment, setRateComment] = useState("");
+  const [errorAlert, setErrorAlert] = useState<string | null>(null);
+
+  const { data } = useSWR(
     router.query.id ? `v1/appointments/${router.query.id}` : null,
     fetcher,
     { revalidateOnFocus: false }
   );
- 
+
+  const appointmentId = data?.id;
+
   const handleRating = (value: any) => {
-    setRating(value);
+    setRate(value);
   };
 
   const handleFeedbackChange = (event: any) => {
-    setFeedback(event.target.value);
+    setRateComment(event.target.value);
   };
 
-  // Função para enviar a avaliação
+  const [handlePost, postData, postError, isFetching] = usePost(
+    `/v1/appointments/${appointmentId}/rate`,
+    () => {
+      setErrorAlert(null);
+      router.push("/paciente/sessoes");
+      onClose();
+    }
+  );
+
   const handleSubmit = () => {
-    console.log({
-      rating,
-      feedback,
-      // appointmentId: dataAppointment?.id,
-      //  expertId: data?.id,
-    });
-    router.push("/paciente/sessoes");
-    onClose();
+    const postData = {
+      rate,
+      rateComment,
+    };
+
+    handlePost(postData);
+
+    if (postError) {
+      setErrorAlert("Erro ao enviar avaliação.");
+    }
   };
 
   return (
@@ -72,6 +78,10 @@ function ModalAvaliarExpert({ isOpen, onClose }: any) {
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
+            {/* Exibe o alerta se houver uma mensagem de erro */}
+            {errorAlert && (
+              <AlertInpa text={errorAlert} status="warning" mb={4} />
+            )}
             <Text mb={4} fontSize="medium" color={"cinzaescuro"}>
               Deixe sua avaliação sobre esta sessão.
             </Text>
@@ -98,7 +108,7 @@ function ModalAvaliarExpert({ isOpen, onClose }: any) {
                     w="100px"
                     _hover={{ boxShadow: "outline" }}
                     borderRadius={4}
-                    bg={rating === value ? "gray.200" : "white"}
+                    bg={rate === value ? "gray.200" : "white"}
                   >
                     {value === 1 && <FaRegSadTear size={32} color={"cinza"} />}
                     {value === 2 && (
@@ -128,7 +138,7 @@ function ModalAvaliarExpert({ isOpen, onClose }: any) {
             </Text>
             <Textarea
               placeholder="Digite sua avaliação aqui..."
-              value={feedback}
+              value={rateComment}
               onChange={handleFeedbackChange}
               size="sm"
               minHeight="150px"
@@ -140,6 +150,7 @@ function ModalAvaliarExpert({ isOpen, onClose }: any) {
               _hover={{ bg: darken("amarelo", 5) }}
               color={"bg"}
               onClick={handleSubmit}
+              isLoading={isFetching}
             >
               Enviar
             </Button>
