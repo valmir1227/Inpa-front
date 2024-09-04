@@ -78,7 +78,6 @@ function ModalAvaliarExpert({ isOpen, onClose }: any) {
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            {/* Exibe o alerta se houver uma mensagem de erro */}
             {errorAlert && (
               <AlertInpa text={errorAlert} status="warning" mb={4} />
             )}

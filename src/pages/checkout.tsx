@@ -1,16 +1,12 @@
-import { Center, Heading, Text } from "@chakra-ui/react";
 import { useMyContext } from "contexts/Context";
 import { useFetch } from "hooks/useFetch";
 import { usePost } from "hooks/usePost";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import { Header } from "../components/Header";
-import { Hero } from "../components/Hero";
-import { Login } from "../components/Login";
 import { CarrinhoVazio } from "../components/paciente/checkout/CarrinhoVazio";
 import { Checkout } from "../components/paciente/checkout/Checkout";
 import { NovoCartao } from "../components/paciente/checkout/NovoCartao";
-import { Psicologos } from "../components/paciente/psicologos/Psicologos";
 
 export default function CheckoutPage() {
   const { user, setUser, getMe } = useMyContext();
@@ -33,7 +29,6 @@ export default function CheckoutPage() {
     if (user?.id) {
       getCards();
       getAddress();
-      // getMe();
     }
   }, [user]);
 

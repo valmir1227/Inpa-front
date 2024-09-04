@@ -8,12 +8,7 @@ import {
   Wrap,
   VStack,
   Box,
-  Image,
-  Modal,
-  ModalContent,
   useDisclosure,
-  ModalOverlay,
-  ModalCloseButton,
   HStack,
   IconButton,
   Tooltip,
@@ -23,15 +18,11 @@ import {
 
 import Link from "next/link";
 import { CardPsicologo } from "./CardPsicologo";
-import { CartPopup } from "./CartPopup";
-import { CardPsicologoDefault } from "./CardPsicologoDefault";
-import { useFetch } from "hooks/useFetch";
 import { useRouter } from "next/router";
 import { LoadingInpa } from "components/global/Loading";
 import { toReal } from "utils/toReal";
 import { AlertInpa } from "components/global/Alert";
 import { motion } from "framer-motion";
-import { useMyContext } from "contexts/Context";
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import { subWeeks, addWeeks, startOfDay } from "date-fns";
 import useSWR from "swr";
@@ -62,10 +53,6 @@ export function SinglePsicologos() {
     addresses: [...(dataExpert?.addressSer || [])],
     calendars: [...(dataExpert?.calendarSer || [])],
   };
-
-  // useEffect(() => {
-  //   if (id) getExpert();
-  // }, [id, initialDate]);
 
   const today = new Date();
   const [aPartirDe, setAPartirDe] = useState(today);
@@ -181,56 +168,6 @@ export function SinglePsicologos() {
                   );
                 })}
               </Wrap>
-              {/* <Wrap
-              fontWeight={500}
-              fontSize={14}
-              w={1000}
-              borderWidth={1}
-              borderRadius={20}
-              p="1rem"
-              justify="space-between"
-            >
-              <VStack justify="flex-end" align="start">
-                <Text>Online</Text>
-                <Text>Presencial</Text>
-              </VStack>
-              <VStack align="center">
-                <Text>Psicoterapia Individual</Text>
-                <Text fontSize={12} fontWeight={400} color="cinza">
-                  R$ 100,00
-                </Text>
-                <Text fontSize={12} fontWeight={400} color="cinza">
-                  R$ 200,00
-                </Text>
-              </VStack>
-              <VStack align="center">
-                <Text>Psicoterapia Individual</Text>
-                <Text fontSize={12} fontWeight={400} color="cinza">
-                  R$ 100,00
-                </Text>
-                <Text fontSize={12} fontWeight={400} color="cinza">
-                  R$ 200,00
-                </Text>
-              </VStack>
-              <VStack align="center">
-                <Text>Psicoterapia Individual</Text>
-                <Text fontSize={12} fontWeight={400} color="cinza">
-                  R$ 100,00
-                </Text>
-                <Text fontSize={12} fontWeight={400} color="cinza">
-                  R$ 200,00
-                </Text>
-              </VStack>
-              <VStack align="center">
-                <Text>Psicoterapia Individual</Text>
-                <Text fontSize={12} fontWeight={400} color="cinza">
-                  R$ 100,00
-                </Text>
-                <Text fontSize={12} fontWeight={400} color="cinza">
-                  R$ 200,00
-                </Text>
-              </VStack>
-            </Wrap> */}
             </Box>
           </VStack>
         )}
@@ -293,6 +230,7 @@ export function SinglePsicologos() {
             </ModalContent>
           </Modal>
         </VStack> */}
+        
           <VStack align="start">
             <Heading color="azul" fontSize={20}>
               Formação

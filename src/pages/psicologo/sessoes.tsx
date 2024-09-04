@@ -1,11 +1,6 @@
-import { Center, Heading, Text } from "@chakra-ui/react";
 import { useMyContext } from "contexts/Context";
-import { useFetch } from "hooks/useFetch";
 import Head from "next/head";
-import { useEffect } from "react";
 import { Header } from "../../components/Header";
-import { Hero } from "../../components/Hero";
-import { Login } from "../../components/Login";
 import { Sessoes } from "../../components/psicologo/sessoes/Sessoes";
 
 export default function SessoesPage() {

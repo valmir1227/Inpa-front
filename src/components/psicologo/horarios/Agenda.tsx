@@ -138,7 +138,6 @@ export function Agenda({
 const Dia = (props: any) => {
   const { day, indexDay, handleSelectHour, isFetchingCalendars } = props;
 
-  console.log(day.date)
   return (
     <VStack key={day.date} zIndex={2}>
       <Text

@@ -1,8 +1,4 @@
 import {
-  Center,
-  Heading,
-  Spinner,
-  Text,
   useDisclosure,
 } from "@chakra-ui/react";
 import { useMyContext } from "contexts/Context";
@@ -10,9 +6,6 @@ import { useFetch } from "hooks/useFetch";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import { Header } from "../../components/Header";
-import { Hero } from "../../components/Hero";
-import { Login } from "../../components/Login";
-import { Agenda } from "../../components/psicologo/horarios/Agenda";
 import { Horarios } from "../../components/psicologo/horarios/Horarios";
 import { Atendimento } from "../../components/psicologo/perfil/Atendimento";
 import { AtivarPresencial } from "../../components/psicologo/presencial/AtivarPresencial";

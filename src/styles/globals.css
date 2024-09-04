@@ -78,3 +78,7 @@ a {
   background-size: contain;
   visibility: hidden !important;
 }
+
+.zm-modal {
+  display: none;
+}

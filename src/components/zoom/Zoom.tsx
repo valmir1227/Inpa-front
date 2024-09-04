@@ -36,6 +36,7 @@ export function Zoom({ dataOvToken, health }: any) {
       startMeetingClient();
     }
   }, [dataOvToken, health]);
+
   function startMeeting() {
     let meetingSDKElement = document.getElementById("meetingSDKElement");
     console.log({ signature, sdkKey, meetingNumber, userName, userEmail });
@@ -88,6 +89,7 @@ export function Zoom({ dataOvToken, health }: any) {
       });
   }
   const meetingSDKElement = React.useRef<HTMLDivElement>(null);
+
   if (!validation.success) {
     console.error("Invalid fields:", validation, dataOvToken);
     return <span>Erro de validação</span>;
@@ -109,14 +111,16 @@ export function Zoom({ dataOvToken, health }: any) {
 
   function startMeetingClient() {
     const element = document.getElementById("meetingSDKElement");
+
     if (!element) return;
     element.style.display = "block";
+
     ZoomMtg.init({
       disablePreview: true,
       enableHD: true,
       enableFullHD: true,
       videoDrag: true,
-      leaveUrl: "",
+      leaveUrl: window.location.href,
       patchJsMedia: true,
       leaveOnPageUnload: true,
       success: (success: any) => {

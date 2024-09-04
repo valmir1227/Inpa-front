@@ -220,7 +220,13 @@ export function SingleSessao({
             </Text>
             <ButtonLink
               href={`/paciente/sessoes/${data.id}?online`}
-              isDisabled={false}
+              isDisabled={
+                hoursLeft > 1 ||
+                hoursLeft < -2 ||
+                data?.status === "Canceled" ||
+                data?.status === "Reserved" ||
+                data?.status === "Finished"
+              }
               title="Iniciar sessão"
             />
             {process.env.NODE_ENV === "development" && (

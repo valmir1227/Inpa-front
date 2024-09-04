@@ -113,7 +113,6 @@ export function Header({ type }: any) {
           if (sessionEnded) {
             onOpenModalAvaliarExpert();
           }
-          setSessionEnded(true);
         }
       };
 
@@ -127,6 +126,7 @@ export function Header({ type }: any) {
   const BackButton = () => {
     const handleSessionEnd = () => {
       if (confirm("Deseja voltar? Você será desconectado da sessão.")) {
+        setSessionEnded(true);
         router.push(`/${type}/sessoes/${router.query.id}`);
       }
     };
@@ -145,7 +145,7 @@ export function Header({ type }: any) {
 
   return (
     <>
-      {type === "paciente" && isOpenModalAvaliarExpert && sessionEnded === true && (
+      {type === "paciente" && isOpenModalAvaliarExpert && sessionEnded && (
         <ModalAvaliarExpert
           isOpen={isOpenModalAvaliarExpert}
           onClose={onCloseModalAvaliarExpert}

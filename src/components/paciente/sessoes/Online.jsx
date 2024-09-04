@@ -361,6 +361,7 @@ const Card = ({
     return <AlertInpa text="Sessão faltante" />;
   if (data.status === "Reserved")
     return <AlertInpa text="Sessão aguardando confirmação do pagamento" />;
+  
   return (
     <VStack w="full" maxW={1200} alignSelf="center" justify="center">
       {/* {shouldMeet && (

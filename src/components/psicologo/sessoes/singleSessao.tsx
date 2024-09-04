@@ -213,7 +213,7 @@ export function SingleSessao({
             <ButtonLink
               href={`/psicologo/sessoes/${data.id}?online`}
               isDisabled={
-                hoursLeft > 1 ||
+                hoursLeft > 1 ||  
                 hoursLeft < -2 ||
                 data?.status === "Canceled" ||
                 data?.status === "Reserved"
