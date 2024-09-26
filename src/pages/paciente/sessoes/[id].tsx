@@ -1,30 +1,29 @@
 import React, { useEffect } from "react";
-import { Center, Heading, Text } from "@chakra-ui/react";
+import { useDisclosure } from "@chakra-ui/react";
 import { useMyContext } from "contexts/Context";
 import { useFetch } from "hooks/useFetch";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { Header } from "../../../components/Header";
-import { Hero } from "../../../components/Hero";
-import { Login } from "../../../components/Login";
-import { Psicologos } from "../../../components/paciente/psicologos/Psicologos";
-import { SinglePsicologos } from "../../../components/paciente/psicologos/singlePsicologo";
 import { Online } from "../../../components/paciente/sessoes/Online";
 import { SingleSessao } from "../../../components/paciente/sessoes/singleSessao";
 import { toReal } from "utils/toReal";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { expertCityState } from "components/global/expertCityState";
-import { usePut } from "hooks/usePut";
-import { usePatch } from "hooks/usePatch";
 import { AlertInpa } from "components/global/Alert";
-import { BASE_URL } from "utils/CONFIG";
 import { fetcher } from "utils/api";
 import useSwr from "swr";
+import ModalAvaliarExpert from "components/paciente/sessoes/ModalAvaliarExpert";
 
 export default function PerfilPage() {
   const router = useRouter();
   const { user } = useMyContext();
+  const {
+    isOpen: isOpenModalAvaliarExpert,
+    onOpen: onOpenModalAvaliarExpert,
+    onClose: onCloseModalAvaliarExpert,
+  } = useDisclosure();
 
   const {
     data,
@@ -37,6 +36,9 @@ export default function PerfilPage() {
     fetcher,
     { revalidateOnFocus: false }
   );
+
+  const finishedSession = data?.status === "Finished";
+  const appointmentId = data?.id;
 
   const [
     dataParticipant,
@@ -76,10 +78,20 @@ export default function PerfilPage() {
   };
 
   useEffect(() => {
-    if (user?.id && router.query.id) {
-      getParticipant();
+    if (finishedSession && appointmentId) {
+      const sessionRated = localStorage.getItem(`avaliacao_${appointmentId}`);
+
+      if (!sessionRated) {
+        onOpenModalAvaliarExpert();
+      }
     }
-  }, [user, router]);
+  }, [finishedSession, onOpenModalAvaliarExpert]);
+
+  useEffect(() => {
+    if (router.query.id) {
+      get();
+    }
+  }, [router.asPath, get]);
 
   const Content = () => {
     if (error)
@@ -89,8 +101,10 @@ export default function PerfilPage() {
           text={error.response.data.error || "Erro ao carregar sessões"}
         />
       );
+
     if (!isFetching && data?.patient_id !== user?.id)
       return <AlertInpa text="Acesso negado" status="warning" />;
+
     if (router.query.online === undefined) {
       return (
         <SingleSessao
@@ -108,7 +122,6 @@ export default function PerfilPage() {
             isFetchingParticipant,
             getParticipant,
           }}
-          /* patch={{ handlePatch, dataPatch, errorPatch, isPatching }} */
           router={router}
         />
       );
@@ -131,6 +144,10 @@ export default function PerfilPage() {
         <meta property="og:image" content="logo.jpg" key="ogimage" />
       </Head>
       <Header type="paciente" />
+      <ModalAvaliarExpert
+        isOpen={isOpenModalAvaliarExpert}
+        onClose={onCloseModalAvaliarExpert}
+      />
       <Content />
     </>
   );

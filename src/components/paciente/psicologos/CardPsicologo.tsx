@@ -8,78 +8,61 @@ import {
   Avatar,
   VStack,
   HStack,
-  Center,
   Breadcrumb,
   BreadcrumbItem,
   FormControl,
   FormLabel,
   Select as ChakraSelect,
-  useDisclosure,
   Skeleton,
 } from "@chakra-ui/react";
 import { StarIcon } from "@chakra-ui/icons";
 import { Agenda } from "./Agenda";
 import { toReal } from "utils/toReal";
-import { LoadingInpa } from "components/global/Loading";
-import { BASE_URL } from "utils/CONFIG";
 import { useMyContext } from "contexts/Context";
 
-function calculateAverageRating(ratings: number[]): number {
-  if (ratings.length === 0) return 0;
-  const total = ratings.reduce(
-    (acc: number, rating: number) => acc + rating,
-    0
-  );
-  return parseFloat((total / ratings.length).toFixed(1));
+function renderStars(avgStars: number) {
+  const fullStars = 5;
+  const filledStars = Math.round(avgStars);
+  const stars = Array.from({ length: fullStars }, (_, index) => (
+    <StarIcon
+      key={index}
+      boxSize="14px"
+      color={index < filledStars ? "amarelo" : "gray.300"}
+    />
+  ));
+  return stars;
 }
 
-function renderStarts(average: any) {
-  const fullStars = Math.floor(average);
-  const hasHalfStar = average % 1 !== 0;
-  const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
-
-  return (
-    <>
-      {Array(fullStars)
-        .fill(0)
-        .map((_, index) => (
-          <StarIcon key={`full-${index}`} boxSize="14px" color="amarelo" />
-        ))}
-      {hasHalfStar && <StarIcon key="half" boxSize="14px" color="amarelo" />}
-      {Array(emptyStars)
-        .fill(0)
-        .map((_, index) => (
-          <StarIcon key={`empty-${index}`} boxSize="14px" color="gray.300" />
-        ))}
-    </>
-  );
+interface ServiceProps {
+  id: number;
+  user_id: number;
+  category: string | null;
+  council: number;
+  name: string;
+  price: string;
+  active: "string" | boolean;
+  created_at: string;
+  updated_at: string;
+  credit_value: number;
+  credit_discount: number;
 }
 
 export function CardPsicologo({ expert, isFetchingExpert, initialDate }: any) {
   const { user } = useMyContext();
-  const today = new Date();
-
+  const avgStars = expert?.avgStars || 0;
   const gender = expert?.gender ? expert?.gender : "";
   const age = expert?.age ? expert?.age + " anos" : "";
   const comma = expert?.age && expert?.gender ? "," : "";
   const genderAndAge = `${gender}${comma} ${age}`;
-
+  const reviewsCount = expert?.reviewsCount;
+  const reviewText =
+    reviewsCount === 0 || reviewsCount === null
+      ? "0 Avaliações"
+      : reviewsCount === 1
+      ? "1 Avaliação"
+      : `${reviewsCount} Avaliações`;
   const [address1] = expert?.addresses || [];
   const { city, state } = address1 || {};
-
-  interface ServiceProps {
-    id: number;
-    user_id: number;
-    category: string | null;
-    council: number;
-    name: string;
-    price: string;
-    active: "string" | boolean;
-    created_at: string;
-    updated_at: string;
-    credit_value: number;
-    credit_discount: number;
-  }
 
   const [selectedService, setSelectedService] = useState({} as ServiceProps);
 
@@ -91,10 +74,6 @@ export function CardPsicologo({ expert, isFetchingExpert, initialDate }: any) {
   useEffect(() => {
     if (!selectedService.id) setSelectedService(servicesSorted[0]);
   }, [expert]);
-
-  // Dados estáticos de avaliações
-  const ratings = [1, 3, 4, 4, 5, 5, 4, 4, 3, 3, 3, 3, 2, 3, 4, 3, 5, 2];
-  const averageRating = calculateAverageRating(ratings);
 
   return (
     <Flex
@@ -136,13 +115,9 @@ export function CardPsicologo({ expert, isFetchingExpert, initialDate }: any) {
               </Text>
             </HStack>
             <HStack pt={3} spacing={2} color="amarelo">
-              {renderStarts(averageRating)}
+              {renderStars(avgStars)}
               <Text fontSize={12} pl={4}>
-                {ratings.length === 0
-                  ? "0 Avaliações"
-                  : ratings.length === 1
-                  ? "1 Avaliação"
-                  : ratings.length + " Avaliações"}
+                {reviewText}
               </Text>
             </HStack>
             <VStack spacing={4} pt={5} align="start" fontSize={12}>

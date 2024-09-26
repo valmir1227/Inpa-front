@@ -18,14 +18,18 @@ import { AlertInpa } from "components/global/Alert";
 import { usePost } from "hooks/usePost";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { AiOutlineFrown, AiOutlineMeh, AiOutlineSmile } from "react-icons/ai";
-import { FaRegGrinStars, FaRegSadTear } from "react-icons/fa";
+import { FaStar } from "react-icons/fa";
 import useSWR from "swr";
 import { fetcher } from "utils/api";
 
-function ModalAvaliarExpert({ isOpen, onClose }: any) {
+interface ModalAvaliarExpertProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+function ModalAvaliarExpert({ isOpen, onClose }: ModalAvaliarExpertProps) {
   const router = useRouter();
-  const [rate, setRate] = useState(null);
+  const [rate, setRate] = useState<number | null>(null);
   const [rateComment, setRateComment] = useState("");
   const [errorAlert, setErrorAlert] = useState<string | null>(null);
 
@@ -45,34 +49,32 @@ function ModalAvaliarExpert({ isOpen, onClose }: any) {
     setRateComment(event.target.value);
   };
 
-  const [handlePost, postData, postError, isFetching] = usePost(
+  const [handlePost, postError, isFetching] = usePost(
     `/v1/appointments/${appointmentId}/rate`,
     () => {
       setErrorAlert(null);
+      localStorage.setItem(`avaliacao_${appointmentId}`, "true");
       router.push("/paciente/sessoes");
       onClose();
     }
   );
-
-  const handleSubmit = () => {
-    const postData = {
-      rate,
-      rateComment,
-    };
-
-    handlePost(postData);
-
-    if (postError) {
+  const handleSubmit = async () => {
+    try {
+      const postData = { rate, rateComment };
+      await handlePost(postData);
+      if (postError) {
+        setErrorAlert("Erro ao enviar avaliação.");
+      }
+    } catch (error) {
       setErrorAlert("Erro ao enviar avaliação.");
     }
   };
 
   return (
     <>
-      <Header type="paciente" />
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent w="100%" mx={4} maxW="600px" bg={"bg"} p={4}>
+        <ModalContent w="100%" mx={4} maxW="400px" bg={"bg"} p={4}>
           <ModalHeader fontSize={18} color={"amarelo"}>
             Deixe sua avaliação
           </ModalHeader>
@@ -85,48 +87,26 @@ function ModalAvaliarExpert({ isOpen, onClose }: any) {
               Deixe sua avaliação sobre esta sessão.
             </Text>
             <Box mb={4}>
-              <Box
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                mb={4}
-              >
+              <Box display="flex" mb={4}>
                 {[1, 2, 3, 4, 5].map((value) => (
                   <Box
                     key={value}
                     as="button"
+                    aria-label={`Avaliação ${value} estrelas`}
                     onClick={() => handleRating(value)}
-                    p={2}
-                    border="1px solid #DCDCDC"
-                    m={1}
-                    textAlign="center"
+                    mr={2}
                     display="flex"
-                    justifyContent="center"
-                    alignItems="center"
                     flexDirection="column"
-                    w="100px"
-                    _hover={{ boxShadow: "outline" }}
-                    borderRadius={4}
-                    bg={rate === value ? "gray.200" : "white"}
+                    w="40px"
+                    _hover={{
+                      transform: "scale(1.1)",
+                    }}
+                    transition="transform 0.2s ease"
                   >
-                    {value === 1 && <FaRegSadTear size={32} color={"cinza"} />}
-                    {value === 2 && (
-                      <AiOutlineFrown size={34} color={"cinza"} />
-                    )}
-                    {value === 3 && <AiOutlineMeh size={34} color={"cinza"} />}
-                    {value === 4 && (
-                      <AiOutlineSmile size={34} color={"cinza"} />
-                    )}
-                    {value === 5 && (
-                      <FaRegGrinStars size={32} color={"cinza"} />
-                    )}
-                    <Text mt={1} fontSize="x-small">
-                      {value === 1 && "Péssimo"}
-                      {value === 2 && "Ruim"}
-                      {value === 3 && "Neutro"}
-                      {value === 4 && "Bom"}
-                      {value === 5 && "Excelente"}
-                    </Text>
+                    <FaStar
+                      size={32}
+                      color={value <= (rate || 0) ? "#FFA61A" : "#9E9E9E"}
+                    />
                   </Box>
                 ))}
               </Box>
@@ -150,6 +130,7 @@ function ModalAvaliarExpert({ isOpen, onClose }: any) {
               color={"bg"}
               onClick={handleSubmit}
               isLoading={isFetching}
+              isDisabled={isFetching || !rate}
             >
               Enviar
             </Button>

@@ -1,5 +1,4 @@
 import {
-  Box,
   Flex,
   Heading,
   HStack,
@@ -7,87 +6,50 @@ import {
   Text,
   Drawer,
   DrawerBody,
-  DrawerFooter,
-  DrawerHeader,
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
   useDisclosure,
-  useColorMode,
   VStack,
   Avatar,
   Menu as ChakraMenu,
-  MenuIcon,
-  MenuButton,
-  MenuItem,
-  MenuList,
   Popover,
   PopoverArrow,
   PopoverBody,
   PopoverCloseButton,
   PopoverContent,
-  PopoverHeader,
   PopoverTrigger,
   Spinner,
   AlertIcon,
-  Icon,
-  Tooltip,
-  Center,
-  Stack,
   useToast,
   Alert,
   Tag,
 } from "@chakra-ui/react";
 
 import {
-  FaHamburger,
-  FaMoon,
-  FaSun,
-  FaThList,
-  FaUser,
-  FaUserAlt,
-} from "react-icons/fa";
-import {
   FiHelpCircle,
   FiLogIn,
   FiLogOut,
   FiMessageCircle,
-  FiMoon,
   FiRefreshCcw,
-  FiSun,
   FiUser,
 } from "react-icons/fi";
 import React, { useEffect, useState } from "react";
-import { LogoSvg } from "../icons";
 import Image from "next/image";
-import Router, { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import Link from "next/link";
 import { ChevronDownIcon, HamburgerIcon } from "@chakra-ui/icons";
 import { Button, ButtonLink } from "./global/Button";
-import { destroyCookie } from "nookies";
-import Cookies from "universal-cookie";
 import { useMyContext } from "contexts/Context";
 import { useFetch } from "hooks/useFetch";
-import { RiProfileFill } from "react-icons/ri";
-import { MdSwapCalls, MdWarning } from "react-icons/md";
+import { MdSwapCalls } from "react-icons/md";
 import { deleteCookie, getCookie, setCookie } from "cookies-next";
-import { BASE_URL } from "utils/CONFIG";
-import { AlertInpa } from "./global/Alert";
 import { useUsers } from "../stores/useUser";
 import * as Sentry from "@sentry/nextjs";
-import { userAgent } from "next/server";
-import ModalAvaliarExpert from "./paciente/sessoes/ModalAvaliarExpert";
 
 export function Header({ type }: any) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const {
-    isOpen: isOpenModalAvaliarExpert,
-    onOpen: onOpenModalAvaliarExpert,
-    onClose: onCloseModalAvaliarExpert,
-  } = useDisclosure();
-
   const router = useRouter();
-  const [sessionEnded, setSessionEnded] = useState(false);
   const disabled = router.query.online !== undefined;
   const { councils, user } = useUsers();
 
@@ -106,27 +68,9 @@ export function Header({ type }: any) {
 
   const userProfileNeedsToUpdate = user?.id && user?.profile_updated === false;
 
-  useEffect(() => {
-    if (type === "paciente") {
-      const handleRouteChange = (url: string) => {
-        if (url === `/paciente/sessoes/${router.query.id}`) {
-          if (sessionEnded) {
-            onOpenModalAvaliarExpert();
-          }
-        }
-      };
-
-      router.events.on("routeChangeComplete", handleRouteChange);
-      return () => {
-        router.events.off("routeChangeComplete", handleRouteChange);
-      };
-    }
-  }, [router.query.id, onOpenModalAvaliarExpert, type, sessionEnded]);
-
   const BackButton = () => {
     const handleSessionEnd = () => {
       if (confirm("Deseja voltar? Você será desconectado da sessão.")) {
-        setSessionEnded(true);
         router.push(`/${type}/sessoes/${router.query.id}`);
       }
     };
@@ -145,88 +89,81 @@ export function Header({ type }: any) {
 
   return (
     <>
-      {type === "paciente" && isOpenModalAvaliarExpert && sessionEnded && (
-        <ModalAvaliarExpert
-          isOpen={isOpenModalAvaliarExpert}
-          onClose={onCloseModalAvaliarExpert}
-        />
-      )}
-      {!isOpenModalAvaliarExpert && (
+      (
+      <Flex
+        direction="column"
+        justify="center"
+        align="center"
+        w="100%"
+        bg="white"
+        as="header"
+      >
+        <BackButton />
+
         <Flex
-          direction="column"
-          justify="center"
+          hidden={disabled}
+          px="1rem"
+          w="full"
           align="center"
-          w="100%"
-          bg="white"
-          as="header"
+          maxW={1200}
+          justify="space-between"
         >
-          <BackButton />
-
-          <Flex
-            hidden={disabled}
-            px="1rem"
-            w="full"
-            align="center"
-            maxW={1200}
-            justify="space-between"
+          <Link href="/" passHref>
+            <a>
+              <Image
+                src="/logo-1-3.png"
+                alt="Logo Inpa"
+                width={130}
+                height={70}
+              />
+            </a>
+          </Link>
+          <HStack
+            color="cinzaescuro"
+            display={{ base: "none", md: "flex" }}
+            spacing={6}
           >
-            <Link href="/" passHref>
-              <a>
-                <Image
-                  src="/logo-1-3.png"
-                  alt="Logo Inpa"
-                  width={130}
-                  height={70}
-                />
-              </a>
-            </Link>
-            <HStack
-              color="cinzaescuro"
-              display={{ base: "none", md: "flex" }}
-              spacing={6}
-            >
-              <Menu type={type} />
-            </HStack>
-            <HStack
-              color="cinzaescuro"
-              display={{ base: "none", md: "flex" }}
-              spacing={10}
-            >
-              <UserInfo type={type} />
-            </HStack>
-            <IconButton
-              aria-label="Abrir menu de navegação"
-              onClick={onOpen}
-              display={{ base: "flex", md: "none" }}
-              my={6}
-              variant="ghost"
-            >
-              <HamburgerIcon boxSize={6} />
-            </IconButton>
-          </Flex>
-
-          <Drawer
-            autoFocus={false}
-            returnFocusOnClose={false}
-            isOpen={isOpen}
-            placement="right"
-            onClose={onClose}
+            <Menu type={type} />
+          </HStack>
+          <HStack
+            color="cinzaescuro"
+            display={{ base: "none", md: "flex" }}
+            spacing={10}
           >
-            <DrawerOverlay />
-            <DrawerContent>
-              <DrawerCloseButton m={3} />
-
-              <DrawerBody>
-                <VStack mt={10}>
-                  <Menu type={type} />
-                  <UserInfo type={type} />
-                </VStack>
-              </DrawerBody>
-            </DrawerContent>
-          </Drawer>
+            <UserInfo type={type} />
+          </HStack>
+          <IconButton
+            aria-label="Abrir menu de navegação"
+            onClick={onOpen}
+            display={{ base: "flex", md: "none" }}
+            my={6}
+            variant="ghost"
+          >
+            <HamburgerIcon boxSize={6} />
+          </IconButton>
         </Flex>
-      )}
 
+        <Drawer
+          autoFocus={false}
+          returnFocusOnClose={false}
+          isOpen={isOpen}
+          placement="right"
+          onClose={onClose}
+        >
+          <DrawerOverlay />
+          <DrawerContent>
+            <DrawerCloseButton m={3} />
+
+            <DrawerBody>
+              <VStack mt={10}>
+                <Menu type={type} />
+                <UserInfo type={type} />
+              </VStack>
+            </DrawerBody>
+          </DrawerContent>
+        </Drawer>
+      </Flex>
+      )
       {(expertMissingCouncils || expertMissingPhoto) && (
         <Flex w="full" align="center" justify="center" bg="#f5f5f5">
           <Alert status="warning" justifyContent="center">
